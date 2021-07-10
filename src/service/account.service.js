@@ -57,6 +57,23 @@ class AccountService {
       throw error
     }
   }
+
+  async getTotal(date) {
+    try {
+      const statement = `
+        SELECT SUM(a.price) total, c.type 
+        FROM account a 
+        LEFT JOIN category c 
+        ON a.category_id = c.id 
+        WHERE a.is_delete = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
+        GROUP BY c.type;
+      `
+      const [result] = await connection.execute(statement, [0, date])
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 module.exports = new AccountService()

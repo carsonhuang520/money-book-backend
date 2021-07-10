@@ -30,6 +30,19 @@ class CategoryController {
     const { type } = ctx.query
     try {
       const result = await categoryService.getCategories(type)
+      console.log(result)
+      for (let i = 0; i < result.length; ) {
+        let item = result[i]
+        if (item.name === '其他' && i < result.length - 2) {
+          result.splice(i, 1)
+          result.push(item)
+        } else if (item.name === '编辑' && i < result.length - 1) {
+          result.splice(i, 1)
+          result.push(item)
+        } else {
+          i++
+        }
+      }
       ctx.body = {
         message: 'success',
         code: 0,

@@ -67,6 +67,23 @@ class AccountController {
       }
     }
   }
+
+  async getTotal(ctx, next) {
+    const { date } = ctx.query
+    try {
+      const result = await accountService.getTotal(date)
+      ctx.body = {
+        message: 'success',
+        code: 0,
+        data: result,
+      }
+    } catch (error) {
+      ctx.body = {
+        message: error.message,
+        code: 1000,
+      }
+    }
+  }
 }
 
 module.exports = new AccountController()
