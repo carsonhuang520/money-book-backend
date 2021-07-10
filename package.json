@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/carsonhuang520/money-book-backend#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "koa": "^2.13.1",
-    "koa-router": "^10.0.0"
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.10"
