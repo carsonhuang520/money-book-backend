@@ -9,6 +9,7 @@ const morgan = require('koa-morgan')
 const accountRouter = require('../router/account.router')
 const categoryRouter = require('../router/category.router')
 const iconRouter = require('../router/icon.router')
+const userRouter = require('../router/user.router')
 
 const app = new Koa()
 
@@ -34,5 +35,7 @@ app.use(categoryRouter.routes())
 app.use(categoryRouter.allowedMethods())
 app.use(iconRouter.routes())
 app.use(iconRouter.allowedMethods())
+app.use(userRouter.routes())
+app.use(userRouter.allowedMethods())
 
 module.exports = app
