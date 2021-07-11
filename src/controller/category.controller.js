@@ -30,7 +30,6 @@ class CategoryController {
     const { type } = ctx.query
     try {
       const result = await categoryService.getCategories(type)
-      console.log(result)
       for (let i = 0; i < result.length; ) {
         let item = result[i]
         if (item.name === '其他' && i < result.length - 2) {

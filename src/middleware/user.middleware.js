@@ -66,6 +66,20 @@ const verifyExists = async (ctx, next) => {
   }
 }
 
+const verifyAuth = async (ctx, next) => {
+  const token = ctx.headers.token
+  if (!token) {
+    ctx.body = {
+      message: '未授权',
+      code: 1000,
+      data: null,
+    }
+    return
+  } else {
+    await next()
+  }
+}
+
 const handlePassword = async (ctx, next) => {
   const { password } = ctx.request.body
   ctx.request.body.password = md5password(password)
@@ -77,4 +91,5 @@ module.exports = {
   verifyExists,
   handlePassword,
   verifyLogin,
+  verifyAuth,
 }
