@@ -28,6 +28,7 @@
     "mysql2": "^2.2.5"
   },
   "devDependencies": {
+    "koa-morgan": "^1.0.1",
     "nodemon": "^2.0.10"
   }
 }

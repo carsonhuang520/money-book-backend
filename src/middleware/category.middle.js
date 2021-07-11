@@ -8,7 +8,7 @@ const verifyExists = async (ctx, next) => {
     if (isExist) {
       ctx.body = {
         message: '该类别已经存在！！！',
-        code: 0,
+        code: 1000,
       }
     } else {
       await next()
