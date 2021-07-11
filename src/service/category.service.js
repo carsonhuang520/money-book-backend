@@ -52,6 +52,26 @@ class CategoryService {
       throw error
     }
   }
+
+  async getAccountsByCategoryId(id) {
+    try {
+      const statement = `SELECT * FROM account WHERE is_delete = 0 AND category_id = ?;`
+      const [result] = await connection.execute(statement, [id])
+      return result
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async getOtherCategory(name, type) {
+    try {
+      const statement = `SELECT * FROM category WHERE name = ? AND type = ?;`
+      const [result] = await connection.execute(statement, [name, type])
+      return result[0]
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 module.exports = new CategoryService()

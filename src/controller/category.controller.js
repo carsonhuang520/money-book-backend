@@ -57,6 +57,10 @@ class CategoryController {
   }
 
   async deleteCategory(ctx, next) {
+    // 1、找到id的分类
+    // 2、查看该分类下的账单
+    // 3、把分类下的账单移到其他分类下面
+    // 4、再把该分类删除
     const { id } = ctx.params
     try {
       const result = await categoryService.deleteCategory(id)

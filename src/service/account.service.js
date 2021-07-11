@@ -74,6 +74,18 @@ class AccountService {
       throw error
     }
   }
+
+  async changeCategory(id, categoryId) {
+    // console.log(id)
+    // console.log(categoryId)
+    try {
+      const statement = `UPDATE account SET category_id = ? WHERE id = ?;`
+      const [result] = await connection.execute(statement, [categoryId, id])
+      return result
+    } catch (error) {
+      throw err
+    }
+  }
 }
 
 module.exports = new AccountService()
