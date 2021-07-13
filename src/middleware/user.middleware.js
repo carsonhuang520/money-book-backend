@@ -56,6 +56,7 @@ const verifyAuth = async (ctx, next) => {
       ctx.user = result
       await next()
     } catch (err) {
+      ctx.status = 403
       ctx.body = new ErrorModel(null, '授权失效')
     }
   }
