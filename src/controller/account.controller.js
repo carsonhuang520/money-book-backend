@@ -4,14 +4,15 @@ const { momentToDate } = require('../utils/format')
 class AccountController {
   async addAccount(ctx, next) {
     let { date, description, categoryId, price } = ctx.request.body
-    console.log(date)
+    const { id } = ctx.user
     date = momentToDate(date, 'YYYY/MM/DD HH:mm')
     try {
       const result = await accountService.addAccount(
         description,
         price,
         categoryId,
-        date
+        date,
+        id
       )
       if (result) {
         ctx.body = {
@@ -36,8 +37,9 @@ class AccountController {
 
   async getAccounts(ctx, next) {
     const { date } = ctx.query
+    const { id } = ctx.user
     try {
-      const result = await accountService.getAccounts(date)
+      const result = await accountService.getAccounts(date, id)
       ctx.body = {
         message: 'success',
         code: 0,
@@ -53,8 +55,9 @@ class AccountController {
 
   async getChartsData(ctx, next) {
     const { type, date } = ctx.query
+    const { id } = ctx.user
     try {
-      const result = await accountService.getChartsData(date, type)
+      const result = await accountService.getChartsData(date, type, id)
       ctx.body = {
         message: 'success',
         code: 0,
@@ -70,8 +73,9 @@ class AccountController {
 
   async getTotal(ctx, next) {
     const { date } = ctx.query
+    const { id } = ctx.user
     try {
-      const result = await accountService.getTotal(date)
+      const result = await accountService.getTotal(date, id)
       ctx.body = {
         message: 'success',
         code: 0,
@@ -81,6 +85,26 @@ class AccountController {
       ctx.body = {
         message: error.message,
         code: 1000,
+      }
+    }
+  }
+
+  async deleteAccount(ctx, next) {
+    const { id } = ctx.params
+    try {
+      const result = await accountService.deleteAccountById(id)
+      if (result) {
+        ctx.body = {
+          message: '删除成功',
+          code: 0,
+          data: null,
+        }
+      }
+    } catch (err) {
+      ctx.body = {
+        message: err.message,
+        code: 1000,
+        data: null,
       }
     }
   }

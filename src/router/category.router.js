@@ -14,10 +14,11 @@ const { verifyAuth } = require('../middleware/user.middleware')
 
 const categoryRouter = new Router({ prefix: '/category' })
 
-categoryRouter.post('/', verifyExists, addCategory)
+categoryRouter.post('/', verifyAuth, verifyExists, addCategory)
 categoryRouter.get('/', verifyAuth, getCategories)
 categoryRouter.delete(
   '/:id',
+  verifyAuth,
   getAccountsByCategotyId,
   changeAccountsCategory,
   deleteCategory

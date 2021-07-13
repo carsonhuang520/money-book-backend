@@ -1,5 +1,7 @@
 const userService = require('../service/user.service')
 const md5password = require('../utils/password-handle')
+const jwt = require('jsonwebtoken')
+const { PUBLIC_KEY } = require('../app/config')
 
 const verifyLogin = async (ctx, next) => {
   const { username, password } = ctx.request.body
@@ -47,7 +49,6 @@ const verifyExists = async (ctx, next) => {
   const { username } = ctx.request.body
   try {
     const result = await userService.isExist(username)
-    console.log(result)
     if (result) {
       ctx.body = {
         message: '该用户已经注册',
@@ -76,7 +77,19 @@ const verifyAuth = async (ctx, next) => {
     }
     return
   } else {
-    await next()
+    try {
+      const result = jwt.verify(token, PUBLIC_KEY, {
+        algorithms: ['RS256'],
+      })
+      ctx.user = result
+      await next()
+    } catch (err) {
+      ctx.body = {
+        message: '授权失效',
+        code: 1000,
+      }
+      return
+    }
   }
 }
 

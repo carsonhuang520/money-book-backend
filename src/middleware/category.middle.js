@@ -25,7 +25,6 @@ const getAccountsByCategotyId = async (ctx, next) => {
   const { id } = ctx.params
   try {
     const result = await categoryService.getAccountsByCategoryId(id)
-    // console.log(result)
     ctx.accounts = result
     await next()
   } catch (err) {
@@ -40,7 +39,6 @@ const changeAccountsCategory = async (ctx, next) => {
   const { type } = ctx.query
   try {
     const other = await categoryService.getOtherCategory('其他', type)
-    // console.log(other)
     const accounts = ctx.accounts
     for (let i = 0; i < accounts.length; i++) {
       await accountService.changeCategory(accounts[i].id, other.id)

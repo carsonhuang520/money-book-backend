@@ -1,17 +1,17 @@
 const connection = require('../app/database')
 
 class AccountService {
-  async addAccount(description, price, categoryId, date) {
+  async addAccount(description, price, categoryId, date, userId) {
     try {
       const statement = `
-        INSERT INTO account (description, date, price, category_id) VALUES (?, ?, ?, ?);
+        INSERT INTO account (description, date, price, category_id, user_id) VALUES (?, ?, ?, ?, ?);
       `
-      console.log(description, price, categoryId, date)
       const [result] = await connection.execute(statement, [
         description,
         date,
         price,
         categoryId,
+        userId,
       ])
       return result
     } catch (error) {
@@ -20,7 +20,7 @@ class AccountService {
     }
   }
 
-  async getAccounts(date) {
+  async getAccounts(date, userId) {
     try {
       const statement = `
         SELECT 
@@ -29,17 +29,17 @@ class AccountService {
         FROM account a 
         LEFT JOIN category c 
         ON a.category_id = c.id
-        WHERE a.is_delete = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
+        WHERE a.is_delete = ? AND a.user_id = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
         ORDER BY a.date DESC;
       `
-      const [result] = await connection.execute(statement, [0, date])
+      const [result] = await connection.execute(statement, [0, userId, date])
       return result
     } catch (error) {
       throw error
     }
   }
 
-  async getChartsData(date, type) {
+  async getChartsData(date, type, userId) {
     try {
       const statement = `
         SELECT 
@@ -48,27 +48,32 @@ class AccountService {
         FROM account a 
         LEFT JOIN category c 
         ON a.category_id = c.id
-        WHERE a.is_delete = ? AND c.type = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
+        WHERE a.is_delete = ? AND a.user_id =? AND c.type = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
         ORDER BY a.date DESC;
       `
-      const [result] = await connection.execute(statement, [0, type, date])
+      const [result] = await connection.execute(statement, [
+        0,
+        userId,
+        type,
+        date,
+      ])
       return result
     } catch (error) {
       throw error
     }
   }
 
-  async getTotal(date) {
+  async getTotal(date, userId) {
     try {
       const statement = `
         SELECT SUM(a.price) total, c.type 
         FROM account a 
         LEFT JOIN category c 
         ON a.category_id = c.id 
-        WHERE a.is_delete = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
+        WHERE a.is_delete = ? AND a.user_id = ? AND DATE_FORMAT(a.date,'%Y-%m') = ? 
         GROUP BY c.type;
       `
-      const [result] = await connection.execute(statement, [0, date])
+      const [result] = await connection.execute(statement, [0, userId, date])
       return result
     } catch (error) {
       throw error
@@ -76,14 +81,22 @@ class AccountService {
   }
 
   async changeCategory(id, categoryId) {
-    // console.log(id)
-    // console.log(categoryId)
     try {
       const statement = `UPDATE account SET category_id = ? WHERE id = ?;`
       const [result] = await connection.execute(statement, [categoryId, id])
       return result
     } catch (error) {
       throw err
+    }
+  }
+
+  async deleteAccountById(id) {
+    try {
+      const statement = `UPDATE account SET is_delete = ? WHERE  id = ?;`
+      const [result] = await connection.execute(statement, [1, id])
+      return result
+    } catch (error) {
+      throw error
     }
   }
 }

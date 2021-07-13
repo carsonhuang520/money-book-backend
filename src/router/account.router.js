@@ -5,14 +5,16 @@ const {
   getAccounts,
   getChartsData,
   getTotal,
+  deleteAccount
 } = require('../controller/account.controller')
-// const { handleDate } = require('../middleware/account.middle')
+const { verifyAuth } = require('../middleware/user.middleware')
 
 const accountRouter = new Router({ prefix: '/accounts' })
 
-accountRouter.post('/', addAccount)
-accountRouter.get('/', getAccounts)
-accountRouter.get('/charts', getChartsData)
-accountRouter.get('/total', getTotal)
+accountRouter.post('/', verifyAuth, addAccount)
+accountRouter.get('/', verifyAuth, getAccounts)
+accountRouter.get('/charts', verifyAuth, getChartsData)
+accountRouter.get('/total', verifyAuth, getTotal)
+accountRouter.delete('/:id', verifyAuth, deleteAccount)
 
 module.exports = accountRouter
