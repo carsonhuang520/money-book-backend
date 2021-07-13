@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const userService = require('../service/user.service')
 const { PRIVATE_KEY } = require('../app/config')
+const { SuccessModel, ErrorModel } = require('../model/res.model')
 
 class UserController {
   async login(ctx, next) {
@@ -10,15 +11,12 @@ class UserController {
       algorithm: 'RS256',
       expiresIn: 12 * 60 * 60,
     })
-    ctx.body = {
-      message: '登录成功',
-      code: 0,
-      data: {
-        id,
-        username,
-        token,
-      },
+    const res = {
+      id,
+      username,
+      token,
     }
+    ctx.body = new SuccessModel(res, '登录成功')
   }
 
   async logout(ctx, next) {}
@@ -27,17 +25,9 @@ class UserController {
     const { username, password } = ctx.request.body
     try {
       const result = await userService.register(username, password)
-      ctx.body = {
-        message: '注册成功',
-        code: 0,
-        data: null,
-      }
+      ctx.body = new SuccessModel(null, '注册成功')
     } catch (error) {
-      ctx.body = {
-        message: error.message,
-        code: 1000,
-        data: null,
-      }
+      ctx.body = new ErrorModel(null, error.message)
     }
   }
 }

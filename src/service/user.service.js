@@ -11,7 +11,7 @@ class UserService {
       const [result] = await connection.execute(statement, [username, password])
       return result
     } catch (err) {
-      throw err
+      console.log(error)
     }
   }
 
@@ -21,7 +21,7 @@ class UserService {
       const [result] = await connection.execute(statement, [username, 0])
       return result[0]
     } catch (err) {
-      throw err
+      console.log(error)
     }
   }
 }

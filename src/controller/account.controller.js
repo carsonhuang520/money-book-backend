@@ -1,3 +1,4 @@
+const { SuccessModel, ErrorModel } = require('../model/res.model')
 const accountService = require('../service/account.service')
 const { momentToDate } = require('../utils/format')
 
@@ -15,23 +16,12 @@ class AccountController {
         id
       )
       if (result) {
-        ctx.body = {
-          message: '创建账单成功~~~',
-          code: 0,
-          data: null,
-        }
+        ctx.body = new SuccessModel(null, '创建账单成功')
       } else {
-        ctx.body = {
-          message: '创建账单失败！！！',
-          code: 1000,
-          data: null,
-        }
+        ctx.body = new ErrorModel(null, '创建账单失败')
       }
     } catch (error) {
-      ctx.body = {
-        message: error.message,
-        code: 1000,
-      }
+      ctx.body = new ErrorModel(null, error.message)
     }
   }
 
@@ -40,16 +30,9 @@ class AccountController {
     const { id } = ctx.user
     try {
       const result = await accountService.getAccounts(date, id)
-      ctx.body = {
-        message: 'success',
-        code: 0,
-        data: result,
-      }
+      ctx.body = new SuccessModel(result, 'success')
     } catch (error) {
-      ctx.body = {
-        message: error.message,
-        code: 1000,
-      }
+      ctx.body = new ErrorModel(null, error.message)
     }
   }
 
@@ -58,16 +41,9 @@ class AccountController {
     const { id } = ctx.user
     try {
       const result = await accountService.getChartsData(date, type, id)
-      ctx.body = {
-        message: 'success',
-        code: 0,
-        data: result,
-      }
+      ctx.body = new SuccessModel(result, 'success')
     } catch (error) {
-      ctx.body = {
-        message: error.message,
-        code: 1000,
-      }
+      ctx.body = new ErrorModel(null, error.message)
     }
   }
 
@@ -76,16 +52,9 @@ class AccountController {
     const { id } = ctx.user
     try {
       const result = await accountService.getTotal(date, id)
-      ctx.body = {
-        message: 'success',
-        code: 0,
-        data: result,
-      }
+      ctx.body = new SuccessModel(result, 'success')
     } catch (error) {
-      ctx.body = {
-        message: error.message,
-        code: 1000,
-      }
+      ctx.body = new ErrorModel(null, error.message)
     }
   }
 
@@ -94,18 +63,10 @@ class AccountController {
     try {
       const result = await accountService.deleteAccountById(id)
       if (result) {
-        ctx.body = {
-          message: '删除成功',
-          code: 0,
-          data: null,
-        }
+        ctx.body = new SuccessModel(null, '删除成功')
       }
     } catch (err) {
-      ctx.body = {
-        message: err.message,
-        code: 1000,
-        data: null,
-      }
+      ctx.body = new ErrorModel(null, err.message)
     }
   }
 }

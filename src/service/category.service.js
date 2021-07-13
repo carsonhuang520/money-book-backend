@@ -12,7 +12,6 @@ class CategoryService {
       return result
     } catch (error) {
       console.log(error)
-      throw err
     }
   }
 
@@ -23,7 +22,6 @@ class CategoryService {
       return result.length !== 0
     } catch (err) {
       console.log(err)
-      throw err
     }
   }
 
@@ -38,7 +36,6 @@ class CategoryService {
       return result
     } catch (error) {
       console.log(error)
-      throw error
     }
   }
 
@@ -49,7 +46,6 @@ class CategoryService {
       return result
     } catch (error) {
       console.log(error)
-      throw error
     }
   }
 
@@ -59,7 +55,7 @@ class CategoryService {
       const [result] = await connection.execute(statement, [id])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
@@ -69,7 +65,7 @@ class CategoryService {
       const [result] = await connection.execute(statement, [name, type])
       return result[0]
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 }

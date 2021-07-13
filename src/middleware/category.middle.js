@@ -1,3 +1,4 @@
+const { ErrorModel, SuccessModel } = require('../model/res.model')
 const accountService = require('../service/account.service')
 const categoryService = require('../service/category.service')
 
@@ -6,18 +7,12 @@ const verifyExists = async (ctx, next) => {
   try {
     const isExist = await categoryService.isExistCategory(name, type)
     if (isExist) {
-      ctx.body = {
-        message: '该类别已经存在！！！',
-        code: 1000,
-      }
+      ctx.body = new ErrorModel(null, '该类别已存在')
     } else {
       await next()
     }
   } catch (error) {
-    ctx.body = {
-      message: '错误！！！',
-      code: 1000,
-    }
+    ctx.body = new ErrorModel(null, error.message)
   }
 }
 
@@ -28,10 +23,7 @@ const getAccountsByCategotyId = async (ctx, next) => {
     ctx.accounts = result
     await next()
   } catch (err) {
-    ctx.body = {
-      message: err.message,
-      code: 1000,
-    }
+    ctx.body = new ErrorModel(null, err.message)
   }
 }
 
@@ -44,7 +36,9 @@ const changeAccountsCategory = async (ctx, next) => {
       await accountService.changeCategory(accounts[i].id, other.id)
     }
     await next()
-  } catch (error) {}
+  } catch (error) {
+    ctx.body = new ErrorModel(null, err.message)
+  }
 }
 
 module.exports = {

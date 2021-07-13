@@ -35,7 +35,7 @@ class AccountService {
       const [result] = await connection.execute(statement, [0, userId, date])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
@@ -59,7 +59,7 @@ class AccountService {
       ])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
@@ -76,7 +76,7 @@ class AccountService {
       const [result] = await connection.execute(statement, [0, userId, date])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
@@ -86,7 +86,7 @@ class AccountService {
       const [result] = await connection.execute(statement, [categoryId, id])
       return result
     } catch (error) {
-      throw err
+      console.log(error)
     }
   }
 
@@ -96,7 +96,7 @@ class AccountService {
       const [result] = await connection.execute(statement, [1, id])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 }

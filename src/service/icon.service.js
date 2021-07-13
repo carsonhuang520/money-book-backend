@@ -7,7 +7,7 @@ class IconService {
       const [result] = await connection.execute(statement, [0])
       return result
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 }

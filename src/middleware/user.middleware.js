@@ -2,23 +2,16 @@ const userService = require('../service/user.service')
 const md5password = require('../utils/password-handle')
 const jwt = require('jsonwebtoken')
 const { PUBLIC_KEY } = require('../app/config')
+const { ErrorModel } = require('../model/res.model')
 
 const verifyLogin = async (ctx, next) => {
   const { username, password } = ctx.request.body
   const result = await userService.isExist(username)
   if (!result) {
-    ctx.body = {
-      message: '该用户未注册',
-      code: 1000,
-      data: null,
-    }
+    ctx.body = new ErrorModel(null, '该用户未注册')
   } else {
     if (md5password(password) !== result.password) {
-      ctx.body = {
-        message: '密码错误',
-        code: 1000,
-        data: null,
-      }
+      ctx.body = new ErrorModel(null, '密码错误')
     } else {
       ctx.user = { id: result.id, username }
       await next()
@@ -29,17 +22,9 @@ const verifyLogin = async (ctx, next) => {
 const verifyUser = async (ctx, next) => {
   const { username, password } = ctx.request.body
   if (!username || !password) {
-    ctx.body = {
-      message: '用户名或密码不能为空',
-      code: 1000,
-      data: null,
-    }
+    ctx.body = new ErrorModel(null, '用户名或密码不能为空')
   } else if (username.length < 6 || password.length < 6) {
-    ctx.body = {
-      message: '用户名或密码不能少于6位',
-      code: 1000,
-      data: null,
-    }
+    ctx.body = new ErrorModel(null, '用户名或密码不能少于6位')
   } else {
     await next()
   }
@@ -50,32 +35,19 @@ const verifyExists = async (ctx, next) => {
   try {
     const result = await userService.isExist(username)
     if (result) {
-      ctx.body = {
-        message: '该用户已经注册',
-        code: 1000,
-        data: null,
-      }
+      ctx.body = new ErrorModel(null, '该用户已注册')
     } else {
       await next()
     }
   } catch (error) {
-    ctx.body = {
-      message: error.message,
-      code: 1000,
-      data: null,
-    }
+    ctx.body = new ErrorModel(null, error.message)
   }
 }
 
 const verifyAuth = async (ctx, next) => {
   const token = ctx.headers.token
   if (!token) {
-    ctx.body = {
-      message: '未授权',
-      code: 1000,
-      data: null,
-    }
-    return
+    ctx.body = new ErrorModel(null, '未授权')
   } else {
     try {
       const result = jwt.verify(token, PUBLIC_KEY, {
@@ -84,11 +56,7 @@ const verifyAuth = async (ctx, next) => {
       ctx.user = result
       await next()
     } catch (err) {
-      ctx.body = {
-        message: '授权失效',
-        code: 1000,
-      }
-      return
+      ctx.body = new ErrorModel(null, '授权失效')
     }
   }
 }
